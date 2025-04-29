@@ -24,7 +24,7 @@ spec:
       volumes:
       - name: html
         configMap:
-          name: nginx-html
+          name: nginx-html-new
   strategy:
     blueGreen:
       activeService: nginx-active
