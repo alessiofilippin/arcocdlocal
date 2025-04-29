@@ -8,6 +8,6 @@ data:
     <html>
       <head><title>Hello</title></head>
       <body>
-        <h1>Hello World from NGINX new!</h1>
+        <h1>Hello World from NGINX new of new!</h1>
       </body>
     </html>
