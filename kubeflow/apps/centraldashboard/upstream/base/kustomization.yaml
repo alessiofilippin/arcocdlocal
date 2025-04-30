@@ -10,6 +10,7 @@ resources:
 - service-account.yaml
 - service.yaml
 - configmap.yaml
+- ingress.yaml
 images:
 - name: ghcr.io/kubeflow/kubeflow/central-dashboard
   newName: ghcr.io/kubeflow/kubeflow/central-dashboard
