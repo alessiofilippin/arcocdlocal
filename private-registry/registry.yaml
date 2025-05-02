@@ -17,7 +17,6 @@ metadata:
   name: registry
   namespace: docker-registry
 spec:
-  nodeName: ubuntu02
   replicas: 1
   selector:
     matchLabels:
@@ -27,6 +26,7 @@ spec:
       labels:
         app: registry
     spec:
+      nodeName: ubuntu02
       containers:
         - name: registry
           image: registry:2
