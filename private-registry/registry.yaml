@@ -17,6 +17,7 @@ metadata:
   name: registry
   namespace: docker-registry
 spec:
+  nodeName: ubuntu02
   replicas: 1
   selector:
     matchLabels:
@@ -38,10 +39,6 @@ spec:
         - name: registry-storage
           persistentVolumeClaim:
             claimName: registry-pvc
-      # volumes:
-      # - name: registry-storage
-      #   emptyDir:
-      #     sizeLimit: 2Gi
 ---
 apiVersion: v1
 kind: Service
