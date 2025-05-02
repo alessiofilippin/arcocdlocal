@@ -30,6 +30,9 @@ spec:
       containers:
         - name: registry
           image: registry:2
+          env:
+          - name: REGISTRY_HTTP_SECRET
+            value: "mysecret"
           ports:
             - containerPort: 5000
           volumeMounts:
