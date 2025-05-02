@@ -4,6 +4,7 @@ metadata:
   name: registry-pvc
   namespace: docker-registry
 spec:
+  storageClassName: local-storage
   accessModes:
     - ReadWriteOnce
   resources:
