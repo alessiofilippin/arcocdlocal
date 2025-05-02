@@ -34,10 +34,14 @@ spec:
           volumeMounts:
             - name: registry-storage
               mountPath: /var/lib/registry
+      # volumes:
+      #   - name: registry-storage
+      #     persistentVolumeClaim:
+      #       claimName: registry-pvc
       volumes:
-        - name: registry-storage
-          persistentVolumeClaim:
-            claimName: registry-pvc
+      - name: cache-volume
+        emptyDir:
+          sizeLimit: 2Gi
 ---
 apiVersion: v1
 kind: Service
