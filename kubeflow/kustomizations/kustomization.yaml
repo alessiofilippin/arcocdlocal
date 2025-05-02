@@ -36,7 +36,8 @@ resources:
 
 # Central Dashboard
 - ../apps/centraldashboard/overlays/oauth2-proxy
-
+# Kubeflow Pipelines
+- ../apps/pipeline/upstream/env/cert-manager/platform-agnostic-multi-user
 components:
 # Pod Security Standards
 # https://kubernetes.io/docs/concepts/security/pod-security-standards/
