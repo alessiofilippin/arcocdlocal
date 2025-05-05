@@ -1,3 +1,11 @@
+Bag Attributes
+    localKeyID: 01 00 00 00 
+    1.3.6.1.4.1.311.17.3.71: 44 00 45 00 53 00 4B 00 54 00 4F 00 50 00 2D 00 44 00 32 00 41 00 4C 00 38 00 50 00 32 00 00 00 
+    friendlyName: private.registry.com Docker Cert
+subject=CN = private.registry.com
+
+issuer=CN = private.registry.com
+
 -----BEGIN CERTIFICATE-----
 MIIDOTCCAiGgAwIBAgIQYoTsEkFteohFoh3c4mRBaDANBgkqhkiG9w0BAQsFADAf
 MR0wGwYDVQQDDBRwcml2YXRlLnJlZ2lzdHJ5LmNvbTAeFw0yNTA1MDUwNjQyMjZa
