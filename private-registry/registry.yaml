@@ -31,12 +31,6 @@ spec:
         - name: registry
           image: registry:2
           env:
-          # - name: REGISTRY_HTTP_TLS_CERTIFICATE
-          #   value: "/var/lib/secrets/tls.crt"
-          # - name: REGISTRY_HTTP_TLS_KEY
-          #   value: "/var/lib/secrets/tls.key"
-          # - name: REGISTRY_HTTP_ADDR
-          #   value: "0.0.0.0:443"
           - name: REGISTRY_HTTP_SECRET
             value: "mysecret"
           ports:
@@ -76,6 +70,7 @@ metadata:
   namespace: docker-registry
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "20000m"
 spec:
   ingressClassName: nginx
   tls:
