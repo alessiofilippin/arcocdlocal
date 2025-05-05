@@ -11,7 +11,8 @@ secretGenerator:
   - name: private-registry-tls-secret
     type: kubernetes.io/tls
     files:
-      - private.registry.com.cer
+      - tls.crt=private.registry.com.crt
+      - tls.key=private.registry.com.key
 
 resources:
   - registry.yaml
