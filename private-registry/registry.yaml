@@ -73,6 +73,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"           # Unlimited size
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"     # 1 hour
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off" # avoid nginx storing temp file locally during image upload
 spec:
   ingressClassName: nginx
   tls:
