@@ -31,16 +31,16 @@ spec:
         - name: registry
           image: registry:2
           env:
-          - name: REGISTRY_HTTP_TLS_CERTIFICATE
-            value: "/var/lib/secrets/tls.crt"
-          - name: REGISTRY_HTTP_TLS_KEY
-            value: "/var/lib/secrets/tls.key"
-          - name: REGISTRY_HTTP_ADDR
-            value: "0.0.0.0:443"
+          # - name: REGISTRY_HTTP_TLS_CERTIFICATE
+          #   value: "/var/lib/secrets/tls.crt"
+          # - name: REGISTRY_HTTP_TLS_KEY
+          #   value: "/var/lib/secrets/tls.key"
+          # - name: REGISTRY_HTTP_ADDR
+          #   value: "0.0.0.0:443"
           - name: REGISTRY_HTTP_SECRET
             value: "mysecret"
           ports:
-            - containerPort: 443
+            - containerPort: 5000
           volumeMounts:
             - name: registry-storage
               mountPath: "/var/lib/registry"
@@ -65,8 +65,8 @@ spec:
     app: registry
   ports:
     - protocol: TCP
-      port: 443
-      targetPort: 443
+      port: 5000
+      targetPort: 5000
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
@@ -92,4 +92,4 @@ spec:
               service:
                 name: registry
                 port:
-                  number: 443
+                  number: 5000
