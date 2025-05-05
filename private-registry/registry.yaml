@@ -37,8 +37,6 @@ spec:
             value: "/var/lib/secrets/tls.key"
           - name: REGISTRY_HTTP_ADDR
             value: "0.0.0.0:443"
-          - name: REGISTRY_HTTP_HOST
-            value: "https://private.registry.com:443"
           - name: REGISTRY_HTTP_SECRET
             value: "mysecret"
           ports:
@@ -77,11 +75,12 @@ metadata:
   name: registry-ingress
   namespace: docker-registry
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   rules:
     - host: private.registry.com
+      secretName: private-registry-tls-secret
       http:
         paths:
           - path: /
