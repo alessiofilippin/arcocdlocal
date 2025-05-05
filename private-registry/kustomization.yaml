@@ -1,0 +1,17 @@
+# kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: docker-registry
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+secretGenerator:
+  - name: private-registry-tls-secret
+    type: kubernetes.io/tls
+    files:
+      - private.registry.com.cer
+
+resources:
+  - registry.yaml
