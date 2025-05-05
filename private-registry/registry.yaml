@@ -37,6 +37,8 @@ spec:
             value: "/var/lib/secrets/tls.key"
           - name: REGISTRY_HTTP_ADDR
             value: "0.0.0.0:443"
+          - name: REGISTRY_HTTP_HOST
+            value: "https://private.registry.com:443"
           - name: REGISTRY_HTTP_SECRET
             value: "mysecret"
           ports:
