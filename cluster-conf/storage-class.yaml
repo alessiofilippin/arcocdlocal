@@ -3,5 +3,4 @@ kind: StorageClass
 metadata:
   name: local-storage
 provisioner: kubernetes.io/no-provisioner # indicates that this StorageClass does not support automatic provisioning
-#volumeBindingMode: WaitForFirstConsumer
-volumeBindingMode: Immediate
+volumeBindingMode: WaitForFirstConsumer
