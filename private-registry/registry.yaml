@@ -32,9 +32,9 @@ spec:
           image: registry:2
           env:
           - name: REGISTRY_HTTP_TLS_CERTIFICATE
-            value: "/run/secrets/tls.crt"
+            value: "/var/lib/secrets/tls.crt"
           - name: REGISTRY_HTTP_TLS_KEY
-            value: "/run/secrets/tls.key"
+            value: "/var/lib/secrets/tls.key"
           - name: REGISTRY_HTTP_ADDR
             value: "0.0.0.0:443"
           - name: REGISTRY_HTTP_SECRET
@@ -43,7 +43,7 @@ spec:
             - containerPort: 443
           volumeMounts:
             - name: registry-storage
-              mountPath: /var/lib/registry
+              mountPath: "/var/lib/registry"
             - name: tls-volume
               mountPath: "/var/lib/secrets"
               readOnly: true
