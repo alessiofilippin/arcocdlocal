@@ -13,6 +13,6 @@ secretGenerator:
     files:
       - tls.crt=private.registry.com.crt
       - tls.key=private.registry.com.key
-#test
+
 resources:
   - registry.yaml

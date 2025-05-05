@@ -78,9 +78,12 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - private.registry.com
+      secretName: private-registry-tls-secret
   rules:
     - host: private.registry.com
-      secretName: private-registry-tls-secret
       http:
         paths:
           - path: /
