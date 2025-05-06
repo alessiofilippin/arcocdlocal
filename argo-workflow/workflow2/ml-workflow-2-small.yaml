@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: llm-train-
+spec:
+  entrypoint: train-model
+  volumeClaimTemplates:
+  - metadata:
+      name: model-pvc
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: local-storage
+  templates:
+  - name: train-model
+    container:
+      image: your-dockerhub-user/lightweight-llm-trainer:latest
+      command: [python]
+      args: ["train.py"]
+      volumeMounts:
+      - name: model-pvc
+        mountPath: /mnt/output
