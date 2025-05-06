@@ -5,6 +5,7 @@ metadata:
   namespace: docker-registry
 spec:
   storageClassName: local-storage
+  volumeName: local-pv-registry
   accessModes:
     - ReadWriteOnce
   resources:

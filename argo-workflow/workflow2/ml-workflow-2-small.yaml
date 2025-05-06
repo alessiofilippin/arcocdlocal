@@ -13,6 +13,7 @@ spec:
         requests:
           storage: 1Gi
       storageClassName: local-storage
+      volumeName: local-pv-llm
   templates:
   - name: train-model
     container:
