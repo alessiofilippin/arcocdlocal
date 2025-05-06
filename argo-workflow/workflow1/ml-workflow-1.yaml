@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: sentiment-analysis-pipeline-
+  name: sentiment-analysis-pipeline-1
 spec:
   entrypoint: sentiment-pipeline
   templates:
