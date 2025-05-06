@@ -70,6 +70,7 @@ metadata:
   namespace: docker-registry
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"           # Unlimited size
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"     # 1 hour
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
