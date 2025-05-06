@@ -14,7 +14,7 @@ spec:
 
     - name: train-step
       container:
-        image: http://registry.docker-registry.svc.cluster.local:5000/sentimentimage
+        image: http://registry.docker-registry.svc.cluster.local:5000/sentimentimage:latest
         command: ["python"]
         args: ["/train_sentiment.py"]
         volumeMounts:
@@ -24,7 +24,7 @@ spec:
 
     - name: evaluate-step
       container:
-        image: http://registry.docker-registry.svc.cluster.local:5000/sentimentimage
+        image: http://registry.docker-registry.svc.cluster.local:5000/sentimentimage:latest
         command: ["python"]
         args: ["/evaluate.py"]
         volumeMounts:
