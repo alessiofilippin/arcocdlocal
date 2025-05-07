@@ -4,7 +4,8 @@ RUN pip install --no-cache-dir \
     "numpy<2.0" \
     torch==2.0.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html \
     transformers==4.35.2 \
-    accelerate==0.20.3
+    accelerate==0.20.3 \
+    datasets==2.13.1
 
 WORKDIR /app
 

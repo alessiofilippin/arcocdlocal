@@ -23,8 +23,8 @@ else:
     print(f"No existing model found. Starting fresh from {model_name}")
     model = AutoModelForCausalLM.from_pretrained(model_name)
 
-# Dataset (Using Hugging Face Datasets library)
-dataset = load_dataset('text', data_files={"train": "data.txt"}, split='train')
+# Load dataset from the local file
+dataset = load_dataset('text', data_files={"train": "/app/data.txt"}, split='train')
 
 # Tokenize the dataset
 def tokenize_function(examples):
