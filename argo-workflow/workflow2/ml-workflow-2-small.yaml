@@ -4,16 +4,10 @@ metadata:
   name: llm-train
 spec:
   entrypoint: train-and-predict
-  volumeClaimTemplates:
-  - metadata:
-      name: model-pvc
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 5Gi
-      storageClassName: local-storage
-      volumeName: local-pv-llm
+  volumes:
+    - name: shared-data
+      persistentVolumeClaim:
+        claimName: model-pvc
   templates:
     - name: train-and-predict
       dag:
@@ -31,7 +25,7 @@ spec:
         command: [python]
         args: ["train_model_small.py"]
         volumeMounts:
-        - name: model-pvc
+        - name: shared-data
           mountPath: /mnt/output
 
     - name: run-inference
@@ -40,5 +34,5 @@ spec:
         command: [python]
         args: ["predict_model_small.py"]
         volumeMounts:
-        - name: model-pvc
+        - name: shared-data
           mountPath: /mnt/output
