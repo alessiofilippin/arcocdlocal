@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: llm-train-
+  name: llm-train
 spec:
   entrypoint: train-model
   volumeClaimTemplates:
