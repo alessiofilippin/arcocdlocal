@@ -15,7 +15,7 @@ metadata:
   namespace: mlworkflow-2-small
 subjects:
   - kind: ServiceAccount
-    name: default  # Or the actual SA used in your workflow
+    name: default
     namespace: mlworkflow-2-small
 roleRef:
   kind: Role

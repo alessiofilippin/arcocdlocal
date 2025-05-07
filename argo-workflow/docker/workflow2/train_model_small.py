@@ -1,9 +1,29 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, Trainer, TrainingArguments, TextDataset, DataCollatorForLanguageModeling
+import os
+from transformers import (
+    AutoTokenizer,
+    AutoModelForCausalLM,
+    Trainer,
+    TrainingArguments,
+    TextDataset,
+    DataCollatorForLanguageModeling,
+)
 
+# Path to trained model (output_dir must match TrainingArguments)
+output_dir = "/mnt/output/model"
 model_name = "sshleifer/tiny-gpt2"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
 
+# Load tokenizer (same for training or resuming)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+# Check for existing model
+if os.path.exists(output_dir) and os.path.isdir(output_dir) and os.path.exists(os.path.join(output_dir, "pytorch_model.bin")):
+    print(f"Loading existing model from {output_dir}")
+    model = AutoModelForCausalLM.from_pretrained(output_dir)
+else:
+    print(f"No existing model found. Starting fresh from {model_name}")
+    model = AutoModelForCausalLM.from_pretrained(model_name)
+
+# Dataset
 dataset = TextDataset(
     tokenizer=tokenizer,
     file_path="data.txt",
@@ -14,9 +34,10 @@ data_collator = DataCollatorForLanguageModeling(
     tokenizer=tokenizer, mlm=False,
 )
 
+# Training args
 training_args = TrainingArguments(
-    output_dir="/mnt/output",  # Persistent volume
-    overwrite_output_dir=True,
+    output_dir=output_dir,
+    overwrite_output_dir=True,  # overwrite only means checkpoint, not starting from scratch
     num_train_epochs=1,
     per_device_train_batch_size=2,
     save_steps=10,
@@ -33,4 +54,4 @@ trainer = Trainer(
 )
 
 trainer.train()
-trainer.save_model("/mnt/output/model")
+trainer.save_model(output_dir)

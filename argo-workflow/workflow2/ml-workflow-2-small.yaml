@@ -15,11 +15,30 @@ spec:
       storageClassName: local-storage
       volumeName: local-pv-llm
   templates:
-  - name: train-model
-    container:
-      image: private.registry.com:31445/lightweight-llm-trainer:latest
-      command: [python]
-      args: ["train_model_small.py"]
-      volumeMounts:
-      - name: model-pvc
-        mountPath: /mnt/output
+    - name: train-and-predict
+      dag:
+        tasks:
+          - name: train
+            template: train-model
+
+          - name: predict
+            dependencies: [train]
+            template: run-inference
+
+    - name: train-model
+      container:
+        image: private.registry.com:31445/lightweight-llm-trainer:latest
+        command: [python]
+        args: ["train_model_small.py"]
+        volumeMounts:
+        - name: model-pvc
+          mountPath: /mnt/output
+
+    - name: run-inference
+      container:
+        image: private.registry.com:31445/lightweight-llm-trainer:latest
+        command: [python]
+        args: ["predict_model_small.py"]
+        volumeMounts:
+        - name: model-pvc
+          mountPath: /mnt/output
