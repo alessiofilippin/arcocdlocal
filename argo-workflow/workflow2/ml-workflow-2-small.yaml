@@ -3,7 +3,7 @@ kind: Workflow
 metadata:
   name: llm-train
 spec:
-  entrypoint: train-model
+  entrypoint: train-and-predict
   volumeClaimTemplates:
   - metadata:
       name: model-pvc
