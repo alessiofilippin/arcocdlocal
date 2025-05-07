@@ -11,13 +11,13 @@ spec:
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: 1Gi
+          storage: 5Gi
       storageClassName: local-storage
       volumeName: local-pv-llm
   templates:
   - name: train-model
     container:
-      image: your-dockerhub-user/lightweight-llm-trainer:latest
+      image: private.registry.com:31445/lightweight-llm-trainer:latest
       command: [python]
       args: ["train.py"]
       volumeMounts:
