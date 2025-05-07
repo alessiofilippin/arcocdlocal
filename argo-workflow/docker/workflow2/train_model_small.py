@@ -4,9 +4,9 @@ from transformers import (
     AutoModelForCausalLM,
     Trainer,
     TrainingArguments,
-    TextDataset,
     DataCollatorForLanguageModeling,
 )
+from datasets import load_dataset
 
 # Path to trained model (output_dir must match TrainingArguments)
 output_dir = "/mnt/output/model"
@@ -23,13 +23,16 @@ else:
     print(f"No existing model found. Starting fresh from {model_name}")
     model = AutoModelForCausalLM.from_pretrained(model_name)
 
-# Dataset
-dataset = TextDataset(
-    tokenizer=tokenizer,
-    file_path="data.txt",
-    block_size=64
-)
+# Dataset (Using Hugging Face Datasets library)
+dataset = load_dataset('text', data_files={"train": "data.txt"}, split='train')
 
+# Tokenize the dataset
+def tokenize_function(examples):
+    return tokenizer(examples['text'], truncation=True, padding="max_length", max_length=64)
+
+tokenized_datasets = dataset.map(tokenize_function, batched=True)
+
+# Data collator
 data_collator = DataCollatorForLanguageModeling(
     tokenizer=tokenizer, mlm=False,
 )
@@ -50,8 +53,11 @@ trainer = Trainer(
     model=model,
     args=training_args,
     data_collator=data_collator,
-    train_dataset=dataset,
+    train_dataset=tokenized_datasets,
 )
 
 trainer.train()
+
+# Save the model and tokenizer
 trainer.save_model(output_dir)
+tokenizer.save_pretrained(output_dir)
