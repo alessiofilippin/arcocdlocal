@@ -19,7 +19,7 @@ spec:
     container:
       image: private.registry.com:31445/lightweight-llm-trainer:latest
       command: [python]
-      args: ["train.py"]
+      args: ["train_model_small.py"]
       volumeMounts:
       - name: model-pvc
         mountPath: /mnt/output
