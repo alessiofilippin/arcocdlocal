@@ -5,9 +5,10 @@ metadata:
 spec:
   entrypoint: train-and-predict
   arguments:
-  parameters:
-    - name: model-name
-      value: sshleifer/tiny-gpt2 # or sshleifer/tiny-gpt2 for smaller model.
+    parameters:
+      - name: model-name
+        value: distilgpt2
+        enum: ["distilgpt2", "sshleifer/tiny-gpt2"]
   volumes:
     - name: shared-data
       persistentVolumeClaim:
