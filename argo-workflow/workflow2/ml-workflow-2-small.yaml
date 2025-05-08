@@ -28,6 +28,9 @@ spec:
             template: run-inference
 
     - name: train-model
+      inputs:
+        parameters:
+          - name: model-name
       container:
         image: private.registry.com:31445/lightweight-llm-trainer:latest
         args: ["train_model_small.py", "{{inputs.parameters.model-name}}"]
