@@ -25,8 +25,11 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 # Set the padding token to be the EOS token
 tokenizer.pad_token = tokenizer.eos_token
 
-# Check for existing model
-if os.path.exists(output_dir) and os.path.isdir(output_dir) and os.path.exists(os.path.join(output_dir, "pytorch_model.bin")):
+# Check for existing model in either safetensors or PyTorch binary format
+safetensors_path = os.path.join(output_dir, "model.safetensors")
+pytorch_bin_path = os.path.join(output_dir, "pytorch_model.bin")
+
+if os.path.exists(output_dir) and os.path.isdir(output_dir) and (os.path.exists(safetensors_path) or os.path.exists(pytorch_bin_path)):
     print(f"Loading existing model from {output_dir}")
     model = AutoModelForCausalLM.from_pretrained(output_dir)
 else:
@@ -34,7 +37,7 @@ else:
     model = AutoModelForCausalLM.from_pretrained(model_name)
 
 # Load and process IMDB dataset
-csv_path = "/app/data/IMDB_Dataset.csv"
+csv_path = "/app/IMDB_Dataset.csv"
 df = pd.read_csv(csv_path)
 
 # Optionally, filter or clean data
