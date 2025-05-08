@@ -19,9 +19,10 @@ spec:
         tasks:
           - name: train
             template: train-model
-            parameters:
-              - name: model-name
-                value: "{{workflow.parameters.model-name}}"
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
 
           - name: predict
             dependencies: [train]
