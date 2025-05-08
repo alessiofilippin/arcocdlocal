@@ -7,7 +7,7 @@ spec:
   arguments:
     parameters:
       - name: model-name
-        value: distilgpt2
+        value: sshleifer/tiny-gpt2
         enum: ["distilgpt2", "sshleifer/tiny-gpt2"]
   volumes:
     - name: shared-data
