@@ -4,6 +4,10 @@ metadata:
   name: llm-train
 spec:
   entrypoint: train-and-predict
+  arguments:
+  parameters:
+    - name: model-name
+      value: distilgpt2 # or sshleifer/tiny-gpt2 for smaller model.
   volumes:
     - name: shared-data
       persistentVolumeClaim:
@@ -14,6 +18,9 @@ spec:
         tasks:
           - name: train
             template: train-model
+            parameters:
+              - name: model-name
+                value: "{{workflow.parameters.model-name}}"
 
           - name: predict
             dependencies: [train]
@@ -22,8 +29,7 @@ spec:
     - name: train-model
       container:
         image: private.registry.com:31445/lightweight-llm-trainer:latest
-        command: [python]
-        args: ["train_model_small.py"]
+        args: ["train_model_small.py", "{{inputs.parameters.model-name}}"]
         volumeMounts:
           - name: shared-data
             mountPath: /mnt/output

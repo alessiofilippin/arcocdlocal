@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir \
 
 WORKDIR /app
 
-COPY train_model_small.py predict_model_small.py data.txt ./
+COPY train_model_small.py predict_model_small.py IMDB_Dataset.csv ./
 
 # Clean up any residual pip cache
 RUN rm -rf /root/.cache/pip

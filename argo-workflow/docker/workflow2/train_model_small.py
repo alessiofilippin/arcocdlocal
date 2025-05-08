@@ -1,4 +1,7 @@
 import os
+import sys
+import pandas as pd
+
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
@@ -10,8 +13,11 @@ from datasets import Dataset
 
 # Path to trained model (output_dir must match TrainingArguments)
 output_dir = "/mnt/output/model"
-#model_name = "sshleifer/tiny-gpt2"
-model_name = "distilgpt2"
+
+# Read model name from command-line argument
+model_name = sys.argv[1] if len(sys.argv) > 1 else "distilgpt2"
+
+print(f"Using model: {model_name}")
 
 # Load tokenizer (same for training or resuming)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -27,13 +33,15 @@ else:
     print(f"No existing model found. Starting fresh from {model_name}")
     model = AutoModelForCausalLM.from_pretrained(model_name)
 
-# Manually load dataset from a local file
-data_file_path = "/app/data.txt"
-with open(data_file_path, "r") as file:
-    lines = file.readlines()
+# Load and process IMDB dataset
+csv_path = "/app/data/IMDB_Dataset.csv"
+df = pd.read_csv(csv_path)
+
+# Optionally, filter or clean data
+texts = df["review"].dropna().astype(str).tolist()
 
 # Create a custom dataset
-dataset = Dataset.from_dict({"text": lines})
+dataset = Dataset.from_dict({"text": texts})
 
 # Verify that the dataset was loaded correctly
 print(f"Loaded dataset with {len(dataset)} samples.")
@@ -59,6 +67,7 @@ training_args = TrainingArguments(
     save_total_limit=1,
     logging_dir="/mnt/output/logs",
     logging_steps=5,
+    save_strategy="epoch",
 )
 
 trainer = Trainer(
@@ -74,3 +83,4 @@ trainer.train()
 trainer.save_model(output_dir)
 tokenizer.save_pretrained(output_dir)
 model.save_pretrained(output_dir)  # Save model weights
+print("Files in output directory:", os.listdir(output_dir))
