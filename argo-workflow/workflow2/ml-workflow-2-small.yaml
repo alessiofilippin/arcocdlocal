@@ -3,17 +3,41 @@ kind: Workflow
 metadata:
   name: llm-train
 spec:
-  entrypoint: train-and-predict
+  entrypoint: main-dag
   arguments:
     parameters:
       - name: model-name
         value: sshleifer/tiny-gpt2
+      - name: run-train
+        value: "false"  
   volumes:
     - name: shared-data
       persistentVolumeClaim:
         claimName: model-pvc
   templates:
-    - name: train-and-predict
+    - name: main-dag
+      dag:
+        tasks:
+          - name: train-and-predict-path
+            template: dag-train-and-predict
+            when: "{{workflow.parameters.run-train}} == true"
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
+
+          - name: predict-only-path
+            template: dag-predict-only
+            when: "{{workflow.parameters.run-train}} == false"
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
+
+    - name: dag-train-and-predict
+      inputs:
+        parameters:
+          - name: model-name
       dag:
         tasks:
           - name: train
@@ -21,10 +45,19 @@ spec:
             arguments:
               parameters:
                 - name: model-name
-                  value: "{{workflow.parameters.model-name}}"
+                  value: "{{inputs.parameters.model-name}}"
 
           - name: predict
             dependencies: [train]
+            template: run-inference
+
+    - name: dag-predict-only
+      inputs:
+        parameters:
+          - name: model-name
+      dag:
+        tasks:
+          - name: predict
             template: run-inference
 
     - name: train-model

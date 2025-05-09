@@ -11,13 +11,13 @@ from transformers import (
 )
 from datasets import Dataset
 
-# Path to trained model (output_dir must match TrainingArguments)
-output_dir = "/mnt/output/model"
-
 # Read model name from command-line argument
 model_name = sys.argv[1] if len(sys.argv) > 1 else "distilgpt2"
 
 print(f"Using model: {model_name}")
+
+# Path to trained model (output_dir must match TrainingArguments)
+output_dir = "/mnt/output/model/{model_name}"
 
 # Load tokenizer (same for training or resuming)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
