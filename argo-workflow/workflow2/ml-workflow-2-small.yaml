@@ -9,7 +9,7 @@ spec:
       - name: model-name
         value: sshleifer/tiny-gpt2
       - name: run-train
-        value: "true"  
+        value: "false"  
   volumes:
     - name: shared-data
       persistentVolumeClaim:
@@ -85,7 +85,7 @@ spec:
             cpu: "1000m"
           limits:
             memory: "4Gi"
-            cpu: "2000m"
+            cpu: "2500m"
         nodeSelector:
           kubernetes.io/hostname: "ubuntu02"
 
@@ -106,6 +106,6 @@ spec:
             cpu: "1000m"
           limits:
             memory: "4Gi"
-            cpu: "2000m"
+            cpu: "2500m"
         nodeSelector:
           kubernetes.io/hostname: "ubuntu02"
