@@ -50,6 +50,10 @@ spec:
           - name: predict
             dependencies: [train]
             template: run-inference
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{inputs.parameters.model-name}}"
 
     - name: dag-predict-only
       inputs:
