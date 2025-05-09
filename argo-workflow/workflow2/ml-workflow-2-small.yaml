@@ -9,7 +9,7 @@ spec:
       - name: model-name
         value: sshleifer/tiny-gpt2
       - name: run-train
-        value: "false"  
+        value: "true"  
   volumes:
     - name: shared-data
       persistentVolumeClaim:
