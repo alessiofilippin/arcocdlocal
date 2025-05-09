@@ -90,6 +90,9 @@ spec:
           kubernetes.io/hostname: "ubuntu02"
 
     - name: run-inference
+      inputs:
+        parameters:
+          - name: model-name
       container:
         image: private.registry.com:31445/lightweight-llm-trainer:latest
         command: ["python"]
