@@ -7,9 +7,10 @@ spec:
   arguments:
     parameters:
       - name: model-name
-        value: sshleifer/tiny-gpt2
+        #value: sshleifer/tiny-gpt2
+        valie: distilgpt2
       - name: run-train
-        value: "false"  
+        value: "true"  
   volumes:
     - name: shared-data
       persistentVolumeClaim:
