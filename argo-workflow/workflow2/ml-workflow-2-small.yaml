@@ -38,13 +38,12 @@ spec:
               parameters:
                 - name: model-name
                   value: "{{workflow.parameters.model-name}}"
-                - name: subset-lenght-to-train
-                  value: "{{workflow.parameters.subset-lenght-to-train}}"
 
     - name: dag-train-and-predict
       inputs:
         parameters:
           - name: model-name
+          - name: subset-lenght-to-train
       dag:
         tasks:
           - name: train
