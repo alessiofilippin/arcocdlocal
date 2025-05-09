@@ -2,8 +2,13 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import os
 
+# Read model name from command-line argument
+model_name = sys.argv[1] if len(sys.argv) > 1 else "distilgpt2"
+
+print(f"Using model: {model_name}")
+
 # Define the path where the model is saved (using the shared volume)
-model_path = "/mnt/output/model"
+model_path = "/mnt/output/model/{model_name}"
 
 # Load the model and tokenizer from the saved path
 tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -30,11 +35,11 @@ with torch.no_grad():
         num_return_sequences=1,  # You can generate multiple outputs if needed
         no_repeat_ngram_size=2,  # Prevent n-gram repetition
         temperature=0.7,  # Set temperature for more diversity (0.7 is a good middle ground)
-        top_p=0.95,  # Use nucleus sampling (top-p) to restrict the sample space
-        top_k=50,  # Use top-k sampling (optional, can be removed if not needed)
+        top_p=0.90,  # Use nucleus sampling (top-p) to restrict the sample space
+        top_k=40,  # Use top-k sampling (optional, can be removed if not needed)
         do_sample=True  # Enable sampling to use temperature and top_p
     )
-
+    
 # Decode the generated text
 generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 

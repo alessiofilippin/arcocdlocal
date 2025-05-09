@@ -59,6 +59,10 @@ spec:
         tasks:
           - name: predict
             template: run-inference
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{inputs.parameters.model-name}}"
 
     - name: train-model
       inputs:
@@ -84,8 +88,8 @@ spec:
     - name: run-inference
       container:
         image: private.registry.com:31445/lightweight-llm-trainer:latest
-        command: [python]
-        args: ["predict_model_small.py"]
+        command: ["python"]
+        args: ["predict_model_small.py", "{{inputs.parameters.model-name}}"]
         volumeMounts:
           - name: shared-data
             mountPath: /mnt/output
