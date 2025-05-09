@@ -9,8 +9,10 @@ spec:
       - name: model-name
         #value: sshleifer/tiny-gpt2
         value: distilgpt2
-      - name: run-train
+      - name: run-train # if false, only inference is executed.
         value: "true"  
+      - name: subset-lenght-to-train # 0 for full dataset otherwise a value.
+        value: "0"
   volumes:
     - name: shared-data
       persistentVolumeClaim:
@@ -26,6 +28,8 @@ spec:
               parameters:
                 - name: model-name
                   value: "{{workflow.parameters.model-name}}"
+                - name: subset-lenght-to-train
+                  value: "{{workflow.parameters.subset-lenght-to-train}}"
 
           - name: predict-only-path
             template: dag-predict-only
@@ -34,6 +38,8 @@ spec:
               parameters:
                 - name: model-name
                   value: "{{workflow.parameters.model-name}}"
+                - name: subset-lenght-to-train
+                  value: "{{workflow.parameters.subset-lenght-to-train}}"
 
     - name: dag-train-and-predict
       inputs:
@@ -47,6 +53,8 @@ spec:
               parameters:
                 - name: model-name
                   value: "{{inputs.parameters.model-name}}"
+                - name: subset-lenght-to-train
+                  value: "{{inputs.parameters.subset-lenght-to-train}}"
 
           - name: predict
             dependencies: [train]
@@ -73,10 +81,11 @@ spec:
       inputs:
         parameters:
           - name: model-name
+          - name: subset-lenght-to-train
       container:
         image: private.registry.com:31445/lightweight-llm-trainer:latest
         command: ["python"]
-        args: ["train_model_small.py", "{{inputs.parameters.model-name}}"]
+        args: ["train_model_small.py", "{{inputs.parameters.model-name}}", "{{inputs.parameters.subset-lenght-to-train}}"]
         volumeMounts:
           - name: shared-data
             mountPath: /mnt/output

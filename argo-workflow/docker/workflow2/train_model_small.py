@@ -13,8 +13,10 @@ from datasets import Dataset
 
 # Read model name from command-line argument
 model_name = sys.argv[1] if len(sys.argv) > 1 else "distilgpt2"
+subset_length = int(sys.argv[2]) if len(sys.argv) > 2 else 0 # if 0 -> full dataset otherwise subset
 
 print(f"Using model: {model_name}")
+print(f"Subset length: {'Full dataset' if subset_length == 0 else subset_length} samples")
 
 # Path to trained model (output_dir must match TrainingArguments)
 output_dir = f"/mnt/output/model/{model_name}"
@@ -39,14 +41,14 @@ else:
 # Load and process IMDB dataset
 csv_path = "/app/IMDB_Dataset.csv"
 df = pd.read_csv(csv_path)
-
-# Optionally, filter or clean data
 texts = df["review"].dropna().astype(str).tolist()
 
-# Create a custom dataset
-dataset = Dataset.from_dict({"text": texts})
+# Apply subset limit if requested
+if subset_length > 0:
+    texts = texts[:subset_length]
 
-# Verify that the dataset was loaded correctly
+# Create dataset
+dataset = Dataset.from_dict({"text": texts})
 print(f"Loaded dataset with {len(dataset)} samples.")
 
 # Tokenize the dataset
@@ -63,14 +65,16 @@ data_collator = DataCollatorForLanguageModeling(
 # Training args
 training_args = TrainingArguments(
     output_dir=output_dir,
-    overwrite_output_dir=True,  # overwrite only means checkpoint, not starting from scratch
-    num_train_epochs=2,
-    per_device_train_batch_size=8,
-    evaluation_strategy="no",
-    save_steps=20,
-    save_total_limit=1,
+    overwrite_output_dir=True,         # Only overwrites checkpoints
+    num_train_epochs=1,                # Start with 1 to reduce runtime and test performance
+    per_device_train_batch_size=2,     # Lower batch size to fit in 4GB RAM
+    evaluation_strategy="no",          # Skip evaluation to save resources
+    save_steps=100,                    # Save less frequently to reduce I/O
+    save_total_limit=1,                # Keep only the last checkpoint
     logging_dir="/mnt/output/logs",
-    logging_steps=50,
+    logging_steps=100,                 # Log less often to reduce CPU load
+    dataloader_num_workers=0,          # Prevent multithreaded data loading (can cause crashes on low-resource systems)
+    disable_tqdm=True                  # Optional: reduce console overhead in slow terminals
 )
 
 trainer = Trainer(
