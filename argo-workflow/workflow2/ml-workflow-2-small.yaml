@@ -12,7 +12,7 @@ spec:
       - name: run-train # if false, only inference is executed.
         value: "true"  
       - name: subset-lenght-to-train # 0 for full dataset otherwise a value.
-        value: "500"
+        value: "5000"
   volumes:
     - name: shared-data
       persistentVolumeClaim:
