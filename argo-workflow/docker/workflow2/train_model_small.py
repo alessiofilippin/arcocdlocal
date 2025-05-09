@@ -55,7 +55,7 @@ def tokenize_function(examples):
 
 tokenized_datasets = dataset.map(tokenize_function, batched=True)
 
-# Data collator
+# Data collatora
 data_collator = DataCollatorForLanguageModeling(
     tokenizer=tokenizer, mlm=False,
 )
@@ -65,12 +65,12 @@ training_args = TrainingArguments(
     output_dir=output_dir,
     overwrite_output_dir=True,  # overwrite only means checkpoint, not starting from scratch
     num_train_epochs=2,
-    per_device_train_batch_size=2,
-    save_steps=10,
+    per_device_train_batch_size=8,
+    evaluation_strategy="no",
+    save_steps=20,
     save_total_limit=1,
     logging_dir="/mnt/output/logs",
-    logging_steps=5,
-    save_strategy="epoch",
+    logging_steps=50,
 )
 
 trainer = Trainer(
