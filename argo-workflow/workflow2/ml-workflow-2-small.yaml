@@ -8,7 +8,7 @@ spec:
     parameters:
       - name: model-name
         #value: sshleifer/tiny-gpt2
-        valie: distilgpt2
+        value: distilgpt2
       - name: run-train
         value: "true"  
   volumes:
