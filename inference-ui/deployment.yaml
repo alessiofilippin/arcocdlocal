@@ -12,6 +12,7 @@ spec:
       labels:
         app: infer
     spec:
+      nodeName: ubuntu02
       containers:
       - name: infer
         image: private.registry.com:31445/inference-ui:latest
