@@ -24,12 +24,12 @@ spec:
       volumes:
       - name: shared-data
         persistentVolumeClaim:
-          claimName: model-pvc
+          claimName: model-pvc-ro
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: model-pvc
+  name: model-pvc-ro
 spec:
   accessModes:
     - ReadOnlyMany
