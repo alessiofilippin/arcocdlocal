@@ -1,6 +1,7 @@
 import os
 import sys
 import pandas as pd
+import csv
 
 from transformers import (
     AutoTokenizer,
@@ -40,8 +41,10 @@ else:
 
 # Load and process IMDB dataset
 csv_path = "/app/IMDB_Dataset.csv"
-df = pd.read_csv(csv_path)
+#df = pd.read_csv(csv_path)
+df = pd.read_csv(csv_path, quoting=csv.QUOTE_ALL, escapechar='\\', on_bad_lines="skip")
 texts = df["review"].dropna().astype(str).tolist()
+
 
 # Apply subset limit if requested
 if subset_length > 0:
@@ -53,9 +56,9 @@ print(f"Loaded dataset with {len(dataset)} samples.")
 
 # Tokenize the dataset
 def tokenize_function(examples):
-    return tokenizer(examples['text'], truncation=True, padding="max_length", max_length=64)
+    return tokenizer(examples['text'], truncation=True, padding="max_length", max_length=32)
 
-tokenized_datasets = dataset.map(tokenize_function, batched=True)
+tokenized_datasets = dataset.map(tokenize_function, batched=True, num_proc=2)
 
 # Data collatora
 data_collator = DataCollatorForLanguageModeling(

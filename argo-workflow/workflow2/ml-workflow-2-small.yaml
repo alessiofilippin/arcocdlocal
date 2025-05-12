@@ -13,6 +13,8 @@ spec:
         value: "true"  
       - name: subset-lenght-to-train # 0 for full dataset otherwise a value.
         value: "1000"
+      - name: input-inference # text as input for the evaluation/inference step.
+        value: ""
   volumes:
     - name: shared-data
       persistentVolumeClaim:
@@ -30,6 +32,8 @@ spec:
                   value: "{{workflow.parameters.model-name}}"
                 - name: subset-lenght-to-train
                   value: "{{workflow.parameters.subset-lenght-to-train}}"
+                - name: input-inference
+                  value: "{{workflow.parameters.input-inference}}"
 
           - name: predict-only-path
             template: dag-predict-only
@@ -38,12 +42,15 @@ spec:
               parameters:
                 - name: model-name
                   value: "{{workflow.parameters.model-name}}"
+                - name: input-inference
+                  value: "{{workflow.parameters.input-inference}}"
 
     - name: dag-train-and-predict
       inputs:
         parameters:
           - name: model-name
           - name: subset-lenght-to-train
+          - name: input-inference
       dag:
         tasks:
           - name: train
@@ -62,11 +69,14 @@ spec:
               parameters:
                 - name: model-name
                   value: "{{inputs.parameters.model-name}}"
+                - name: input-inference
+                  value: "{{inputs.parameters.input-inference}}"
 
     - name: dag-predict-only
       inputs:
         parameters:
           - name: model-name
+          - name: input-inference
       dag:
         tasks:
           - name: predict
@@ -75,6 +85,8 @@ spec:
               parameters:
                 - name: model-name
                   value: "{{inputs.parameters.model-name}}"
+                - name: input-inference
+                  value: "{{inputs.parameters.input-inference}}"
 
     - name: train-model
       inputs:
@@ -102,10 +114,11 @@ spec:
       inputs:
         parameters:
           - name: model-name
+          - name: input-inference
       container:
         image: private.registry.com:31445/lightweight-llm-trainer:latest
         command: ["python"]
-        args: ["predict_model_small.py", "{{inputs.parameters.model-name}}"]
+        args: ["predict_model_small.py", "{{inputs.parameters.model-name}}", "{{inputs.parameters.input-inference}}"]
         volumeMounts:
           - name: shared-data
             mountPath: /mnt/output
