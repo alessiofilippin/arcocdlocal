@@ -11,6 +11,8 @@ spec:
         value: distilgpt2
       - name: run-train # if false, only inference is executed.
         value: "true"  
+      - name: train-only # if true, only train is executed.
+        value: "true"  
       - name: subset-lenght-to-train # 0 for full dataset otherwise a value.
         value: "1000"
       - name: input-inference # text as input for the evaluation/inference step.
@@ -25,7 +27,7 @@ spec:
         tasks:
           - name: train-and-predict-path
             template: dag-train-and-predict
-            when: "{{workflow.parameters.run-train}} == true"
+            when: "{{workflow.parameters.run-train}} == true && {{workflow.parameters.train-only}} == false"
             arguments:
               parameters:
                 - name: model-name
@@ -37,13 +39,23 @@ spec:
 
           - name: predict-only-path
             template: dag-predict-only
-            when: "{{workflow.parameters.run-train}} == false"
+            when: "{{workflow.parameters.run-train}} == false && {{workflow.parameters.train-only}} == false"
             arguments:
               parameters:
                 - name: model-name
                   value: "{{workflow.parameters.model-name}}"
                 - name: input-inference
                   value: "{{workflow.parameters.input-inference}}"
+
+          - name: train-only-path
+            template: dag-train-only
+            when: "{{workflow.parameters.run-train}} == true && {{workflow.parameters.train-only}} == true"
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
+                - name: subset-lenght-to-train
+                  value: "{{workflow.parameters.subset-lenght-to-train}}"
 
     - name: dag-train-and-predict
       inputs:
@@ -87,6 +99,22 @@ spec:
                   value: "{{inputs.parameters.model-name}}"
                 - name: input-inference
                   value: "{{inputs.parameters.input-inference}}"
+
+    - name: dag-train-only
+      inputs:
+        parameters:
+          - name: model-name
+          - name: subset-lenght-to-train
+      dag:
+        tasks:
+          - name: train
+            template: train-model
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{inputs.parameters.model-name}}"
+                - name: subset-lenght-to-train
+                  value: "{{inputs.parameters.subset-lenght-to-train}}"
 
     - name: train-model
       inputs:
