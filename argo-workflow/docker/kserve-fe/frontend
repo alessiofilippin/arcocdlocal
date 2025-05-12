@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>distilgpt2 Inference</title>
+  </head>
+  <body>
+    <h2>Ask GPT</h2>
+    <textarea id="input" rows="4" cols="50" placeholder="Write your prompt here..."></textarea>
+    <br>
+    <button onclick="sendRequest()">Generate</button>
+    <pre id="output"></pre>
+
+    <script>
+      async function sendRequest() {
+        const inputText = document.getElementById("input").value;
+        const response = await fetch("http://<your-kserve-ingress>/v1/models/distilgpt2:predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ instances: [{ text: inputText }] })
+        });
+        const result = await response.json();
+        document.getElementById("output").innerText = result.predictions[0];
+      }
+    </script>
+  </body>
+</html>

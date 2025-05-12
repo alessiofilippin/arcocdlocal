@@ -1,0 +1,16 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: distilgpt2
+spec:
+  predictor:
+    containers:
+      - image: your-registry/distilgpt2-kserve
+        name: kserve-container
+        volumeMounts:
+        - name: model-volume
+          mountPath: /mnt/models
+    volumes:
+    - name: model-volume
+      persistentVolumeClaim:
+        claimName: your-pvc  # Or use s3/gcs bucket mount
