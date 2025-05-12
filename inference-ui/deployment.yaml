@@ -38,7 +38,7 @@ spec:
       storage: 5Gi
   volumeMode: Filesystem
   storageClassName: local-storage
-  volumeName: local-pv-llm
+  volumeName: local-pv-llm-inference-ro
 ---
 apiVersion: v1
 kind: Service
