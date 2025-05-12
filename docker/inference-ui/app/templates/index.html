@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Model Inference</title>
+</head>
+<body>
+    <h2>Text Generation</h2>
+    <form method="post" action="/generate">
+        <textarea name="prompt" rows="5" cols="60" placeholder="Enter your prompt here..."></textarea><br>
+        <button type="submit">Generate</button>
+    </form>
+    {% if output %}
+        <h3>Generated Output:</h3>
+        <pre>{{ output }}</pre>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-infer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infer
+  template:
+    metadata:
+      labels:
+        app: infer
+    spec:
+      containers:
+      - name: infer
+        image: private.registry.com:31445/inference-ui:latest
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: shared-data
+          mountPath: /mnt/output/
+      volumes:
+      - name: shared-data
+        persistentVolumeClaim:
+          claimName: model-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: model-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  volumeMode: Filesystem
+  storageClassName: local-storage
+  volumeName: local-pv-llm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-infer-service
+spec:
+  selector:
+    app: infer
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
+---
+kind: Ingress
+metadata:
+  name: infer-ui
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: inference.local.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fastapi-infer-service
+                port:
+                  number: 8000
