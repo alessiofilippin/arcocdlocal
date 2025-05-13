@@ -55,7 +55,7 @@ spec:
       volumes:
         - name: dvc-storage-repo
           persistentVolumeClaim:
-            claimName: dvc-pvc-repo   
+            claimName: dvc-pvc-repo-nfs2 
         # - name: dvc-storage-current
         #   persistentVolumeClaim:
         #     claimName: dvc-pvc-current
