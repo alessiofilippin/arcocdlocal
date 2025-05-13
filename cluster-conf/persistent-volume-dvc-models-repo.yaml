@@ -11,11 +11,3 @@ spec:
   storageClassName: local-storage
   local:
     path: /mnt/dvc/repo
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - ubuntu03
