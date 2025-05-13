@@ -1,0 +1,18 @@
+### publish model
+
+# Init
+git init
+dvc init
+
+echo "my model" > model.pkl
+dvc add model.pkl
+git add model.pkl.dvc .gitignore
+git commit -m "Add model v1"
+git tag model-v1
+dvc push
+
+### pull
+
+git fetch --all --tags
+git checkout tags/model-v1
+dvc pull

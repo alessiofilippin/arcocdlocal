@@ -8,7 +8,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 
 # Load model from mounted volume
-MODEL_PATH = "/mnt/output/model/distilgpt2"
+MODEL_PATH = "/mnt/output/"
 model = AutoModelForCausalLM.from_pretrained(MODEL_PATH)
 tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
 

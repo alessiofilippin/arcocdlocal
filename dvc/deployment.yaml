@@ -1,23 +1,15 @@
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: dvc-pv
 spec:
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  local:
-    path: /mnt/data/dvc
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - your-node-name
+  hostPath:
+    path: /mnt/data/dvc  # Make sure this exists on the node
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -28,38 +20,63 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dvc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dvc
+  template:
+    metadata:
+      labels:
+        app: dvc
+    spec:
+      containers:
+        - name: dvc
+          image: your-registry/dvc-local:latest
+          command: ["dvc", "server", "--host", "0.0.0.0", "--port", "8000"]
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: dvc-storage
+              mountPath: /home/dvcuser/dvcdata
+      volumes:
+        - name: dvc-storage
+          persistentVolumeClaim:
+            claimName: dvc-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: fastapi-infer-service
+  name: dvc-service
 spec:
   selector:
-    app: infer
+    app: dvc
   ports:
     - protocol: TCP
-      port: 8000
+      port: 80
       targetPort: 8000
-  type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: infer-ui
+  name: dvc-ingress
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx
   rules:
-    - host: inference.local.com
+    - host: dvc.local  # Make sure this domain resolves to your cluster
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: fastapi-infer-service
+                name: dvc-service
                 port:
-                  number: 8000
+                  number: 80
