@@ -1,26 +1,28 @@
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: dvc-pv
-spec:
-  capacity:
-    storage: 2Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mnt/data/dvc  # Make sure this exists on the node
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: dvc-pvc
+  name: dvc-pvc-repo
 spec:
+  storageClassName: local-storage
+  volumeName: local-pv-dvc-repo
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 15Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dvc-pvc-current
+spec:
+  storageClassName: local-storage
+  volumeName: local-pv-dvc-repo-current-model
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,17 +40,23 @@ spec:
     spec:
       containers:
         - name: dvc
-          image: your-registry/dvc-local:latest
+          image: private.registry.com:31445/dvc:latest
           command: ["dvc", "server", "--host", "0.0.0.0", "--port", "8000"]
           ports:
             - containerPort: 8000
           volumeMounts:
-            - name: dvc-storage
+            - name: dvc-storage-repo
               mountPath: /home/dvcuser/dvcdata
+          volumeMounts:
+            - name: dvc-storage-current
+              mountPath: /home/dvcuser/dvcdata-current
       volumes:
-        - name: dvc-storage
+        - name: dvc-storage-repo
           persistentVolumeClaim:
-            claimName: dvc-pvc
+            claimName: dvc-pvc-repo
+        - name: dvc-storage-current
+          persistentVolumeClaim:
+            claimName: dvc-pvc-current
 ---
 apiVersion: v1
 kind: Service
@@ -70,7 +78,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: dvc.local  # Make sure this domain resolves to your cluster
+    - host: dvc.local.com
       http:
         paths:
           - path: /
