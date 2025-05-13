@@ -38,6 +38,7 @@ spec:
       labels:
         app: dvc
     spec:
+      nodeName: ubuntu03
       containers:
         - name: dvc
           image: private.registry.com:31445/dvc:latest
