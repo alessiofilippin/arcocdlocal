@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: dvc-pvc-repo-nfs
+  name: dvc-pvc-repo-nfs2
 spec:
   storageClassName: ""
   volumeName: nfs-pv-dvc-repo
