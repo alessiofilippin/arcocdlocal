@@ -3,13 +3,14 @@ kind: PersistentVolumeClaim
 metadata:
   name: dvc-pvc-repo
 spec:
-  storageClassName: local-storage
-  volumeName: local-pv-dvc-repo
+  storageClassName: nfs-storage
+  volumeName: nfs-pv-dvc-repo
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 15Gi
+
 # ---
 # apiVersion: v1
 # kind: PersistentVolumeClaim
@@ -48,13 +49,13 @@ spec:
           volumeMounts:
             - name: dvc-storage-repo
               mountPath: /home/dvcuser/dvcdata
-          volumeMounts:
-            - name: dvc-storage-current
-              mountPath: /home/dvcuser/dvcdata-current
+          # volumeMounts:
+          #   - name: dvc-storage-current
+          #     mountPath: /home/dvcuser/dvcdata-current
       volumes:
         - name: dvc-storage-repo
           persistentVolumeClaim:
-            claimName: dvc-pvc-repo
+            claimName: dvc-pvc-repo   
         # - name: dvc-storage-current
         #   persistentVolumeClaim:
         #     claimName: dvc-pvc-current
