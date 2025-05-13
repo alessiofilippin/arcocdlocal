@@ -1,9 +1,0 @@
-FROM python:3.10-slim
-
-RUN pip install transformers==4.39.3
-RUN pip install --no-cache-dir transformers datasets torch scikit-learn
-
-COPY train_sentiment.py /train_sentiment.py
-COPY evaluate.py /evaluate.py
-
-ENTRYPOINT ["python"]

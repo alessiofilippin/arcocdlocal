@@ -6,6 +6,7 @@ RUN pip install --no-cache-dir \
     fastapi==0.110.0 \
     torch==2.3.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html \
     transformers==4.41.0 \
+    python-multipart \
     uvicorn==0.29.0
 
 # Copy source

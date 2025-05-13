@@ -1,0 +1,12 @@
+# Dockerfile for DVC with local storage only
+FROM python:3.10-slim
+
+# Reduce image size and install base DVC
+RUN pip install --no-cache-dir dvc && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY . .
+
+CMD ["sleep", "infinity"]  # Keep container running for manual or scripted DVC use
