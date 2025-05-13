@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: dvc-pvc-repo-nfs
 spec:
-  # storageClassName: nfs-storage
+  storageClassName: ""
   volumeName: nfs-pv-dvc-repo
   accessModes:
     - ReadWriteMany
