@@ -46,6 +46,7 @@ spec:
                   value: "{{inputs.parameters.subset-lenght-to-train}}"
 
           - name: push-model
+            dependencies: [train]
             template: push-model-to-dvc
 
     - name: train-model
