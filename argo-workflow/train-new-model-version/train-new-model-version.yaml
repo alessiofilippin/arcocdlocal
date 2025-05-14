@@ -45,6 +45,9 @@ spec:
                 - name: subset-lenght-to-train
                   value: "{{inputs.parameters.subset-lenght-to-train}}"
 
+          - name: push-model
+            template: push-model-to-dvc
+
     - name: train-model
       inputs:
         parameters:
@@ -64,14 +67,9 @@ spec:
           limits:
             memory: "4Gi"
             cpu: "2000m"
-        nodeSelector:
-          kubernetes.io/hostname: "ubuntu02"
 
     - name: push-model-to-dvc
       inputs:
-        parameters:
-          - name: model-name
-          - name: subset-lenght-to-train
       container:
         image: private.registry.com:31445/dvc:latest
         command: ["python"]
@@ -86,5 +84,3 @@ spec:
           limits:
             memory: "2Gi"
             cpu: "800m"
-        nodeSelector:
-          kubernetes.io/hostname: "ubuntu02"
