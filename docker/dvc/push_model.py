@@ -5,8 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-SOURCE_DIR = "/mnt/output/model/distilgpt2"
-REPO_DIR = "/home/dvcuser/dvcdata"
+SOURCE_DIR = "/home/dvcuser/dvcdata/model/distilgpt2"
+REPO_DIR = "/home/dvcuser/dvcdata/model/distilgpt2"
 
 def run(cmd, cwd=None):
     print(f"> {cmd}")

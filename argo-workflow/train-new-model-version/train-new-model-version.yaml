@@ -11,9 +11,6 @@ spec:
       - name: subset-lenght-to-train # 0 for full dataset otherwise a value.
         value: "1000"
   volumes:
-    - name: shared-data
-      persistentVolumeClaim:
-        claimName: model-pvc
     - name: dvc-storage-repo
       nfs:
         path: /mnt/dvc/repo
@@ -58,7 +55,7 @@ spec:
         command: ["python"]
         args: ["train_model_small.py", "{{inputs.parameters.model-name}}", "{{inputs.parameters.subset-lenght-to-train}}"]
         volumeMounts:
-          - name: shared-data
+          - name: dvc-storage-repo
             mountPath: /mnt/output
         resources:
           requests:
@@ -80,8 +77,6 @@ spec:
         command: ["python"]
         args: ["/usr/local/bin/push_model.py", "v1.0.0"]
         volumeMounts:
-          - name: shared-data
-            mountPath: /mnt/output
           - name: dvc-storage-repo
             mountPath: /home/dvcuser/dvcdata
         resources:
