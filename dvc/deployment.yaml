@@ -54,11 +54,27 @@ spec:
           #     mountPath: /home/dvcuser/dvcdata-current
       volumes:
         - name: dvc-storage-repo
-          persistentVolumeClaim:
-            claimName: dvc-pvc-repo-nfs2 
+          nfs:
+            path: /mnt/dvc/repo
+            server: 192.168.137.21
+            readOnly: false
         # - name: dvc-storage-current
         #   persistentVolumeClaim:
         #     claimName: dvc-pvc-current
+# ---
+#   containers:
+#   - image: registry.k8s.io/test-webserver
+#     name: test-container
+#     volumeMounts:
+#     - mountPath: /my-nfs-dataa
+#       name: test-volume
+#   volumes:
+#   - name: test-volume
+#     nfs:
+#       server: my-nfs-server.example.com
+#       path: /my-nfs-volume
+#       readOnly: true
+#       https://kubernetes.io/docs/concepts/storage/volumes/#nfs
 ---
 apiVersion: v1
 kind: Service
