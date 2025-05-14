@@ -1,0 +1,95 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: train-new-model-version
+spec:
+  entrypoint: main-dag
+  arguments:
+    parameters:
+      - name: model-name
+        value: distilgpt2 
+      - name: subset-lenght-to-train # 0 for full dataset otherwise a value.
+        value: "1000"
+  volumes:
+    - name: shared-data
+      persistentVolumeClaim:
+        claimName: model-pvc
+    - name: dvc-storage-repo
+      nfs:
+        path: /mnt/dvc/repo
+        server: 192.168.137.21
+        readOnly: false
+  templates:
+    - name: main-dag
+      dag:
+        tasks:
+          - name: train-and-push-new-version
+            template: dag-train-and-predict
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
+                - name: subset-lenght-to-train
+                  value: "{{workflow.parameters.subset-lenght-to-train}}"
+
+    - name: dag-train-and-predict
+      inputs:
+        parameters:
+          - name: model-name
+          - name: subset-lenght-to-train
+      dag:
+        tasks:
+          - name: train
+            template: train-model
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{inputs.parameters.model-name}}"
+                - name: subset-lenght-to-train
+                  value: "{{inputs.parameters.subset-lenght-to-train}}"
+
+    - name: train-model
+      inputs:
+        parameters:
+          - name: model-name
+          - name: subset-lenght-to-train
+      container:
+        image: private.registry.com:31445/lightweight-llm-trainer:latest
+        command: ["python"]
+        args: ["train_model_small.py", "{{inputs.parameters.model-name}}", "{{inputs.parameters.subset-lenght-to-train}}"]
+        volumeMounts:
+          - name: shared-data
+            mountPath: /mnt/output
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        nodeSelector:
+          kubernetes.io/hostname: "ubuntu02"
+
+    - name: push-model-to-dvc
+      inputs:
+        parameters:
+          - name: model-name
+          - name: subset-lenght-to-train
+      container:
+        image: private.registry.com:31445/dvc:latest
+        command: ["python"]
+        args: ["/usr/local/bin/push_model.py", "v1.0.0"]
+        volumeMounts:
+          - name: shared-data
+            mountPath: /mnt/output
+          - name: dvc-storage-repo
+            mountPath: /home/dvcuser/dvcdata
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "300m"
+          limits:
+            memory: "2Gi"
+            cpu: "800m"
+        nodeSelector:
+          kubernetes.io/hostname: "ubuntu02"

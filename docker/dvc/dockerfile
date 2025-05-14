@@ -15,6 +15,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install DVC with only the local file system support (no cloud dependencies)
 RUN pip install --no-cache-dir dvc[ssh]
 
+# Copy the push script
+COPY push_model.py /usr/local/bin/push_model.py
+RUN chmod +x /usr/local/bin/push_model.py
+
 # Create a non-root user (optional for security)
 RUN useradd -ms /bin/bash dvcuser
 USER dvcuser
