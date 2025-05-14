@@ -9,7 +9,7 @@ spec:
       - name: model-name
         value: distilgpt2 
       - name: subset-lenght-to-train # 0 for full dataset otherwise a value.
-        value: "1000"
+        value: "100"
   volumes:
     - name: dvc-storage-repo
       nfs:
