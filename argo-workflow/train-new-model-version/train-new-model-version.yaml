@@ -10,6 +10,9 @@ spec:
         value: distilgpt2 
       - name: subset-lenght-to-train # 0 for full dataset otherwise a value.
         value: "100"
+      - name: tag
+        value: "v1.0.1"
+
   volumes:
     - name: dvc-storage-repo
       nfs:
@@ -21,7 +24,7 @@ spec:
       dag:
         tasks:
           - name: train-and-push-new-version
-            template: dag-train-and-predict
+            template: dag-train-and-push
             arguments:
               parameters:
                 - name: model-name
@@ -29,11 +32,12 @@ spec:
                 - name: subset-lenght-to-train
                   value: "{{workflow.parameters.subset-lenght-to-train}}"
 
-    - name: dag-train-and-predict
+    - name: dag-train-and-push
       inputs:
         parameters:
           - name: model-name
           - name: subset-lenght-to-train
+          - name: tag
       dag:
         tasks:
           - name: train
@@ -48,6 +52,10 @@ spec:
           - name: push-model
             dependencies: [train]
             template: push-model-to-dvc
+            arguments:
+              parameters:
+                - name: tag
+                  value: "{{inputs.parameters.tag}}"
 
     - name: train-model
       inputs:
@@ -71,10 +79,12 @@ spec:
 
     - name: push-model-to-dvc
       inputs:
+        parameters:
+          - name: tag
       container:
         image: private.registry.com:31445/dvc:latest
         command: ["python"]
-        args: ["/usr/local/bin/push_model.py", "v1.0.0"]
+        args: ["/usr/local/bin/push_model.py", "{{inputs.parameters.tag}}"]
         volumeMounts:
           - name: dvc-storage-repo
             mountPath: /home/dvcuser/dvcdata

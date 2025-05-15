@@ -19,6 +19,10 @@ RUN pip install --no-cache-dir dvc[ssh]
 COPY push_model.py /usr/local/bin/push_model.py
 RUN chmod +x /usr/local/bin/push_model.py
 
+# Copy the pull script
+COPY pull_model.py /usr/local/bin/pull_model.py
+RUN chmod +x /usr/local/bin/pull_model.py
+
 # Create a non-root user (optional for security)
 RUN useradd -ms /bin/bash dvcuser
 USER dvcuser
