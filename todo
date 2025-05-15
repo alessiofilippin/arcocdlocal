@@ -1,3 +1,4 @@
 - Add nfs disk for current model used by inteference-ui
 - new workflow to promote tag model to current model
 - bluegreen deployment for inference ui
+- readme
