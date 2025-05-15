@@ -12,7 +12,6 @@ spec:
         value: "100"
       - name: tag
         value: "v1.0.1"
-
   volumes:
     - name: dvc-storage-repo
       nfs:
@@ -31,6 +30,8 @@ spec:
                   value: "{{workflow.parameters.model-name}}"
                 - name: subset-lenght-to-train
                   value: "{{workflow.parameters.subset-lenght-to-train}}"
+                - name: tag
+                  value: "{{workflow.parameters.tag}}"
 
     - name: dag-train-and-push
       inputs:
