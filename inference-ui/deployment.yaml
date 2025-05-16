@@ -19,7 +19,7 @@ spec:
         ports:
         - containerPort: 8000
         volumeMounts:
-        - name: shared-data
+        - name: dvc-current-model
           mountPath: /mnt/output/
       volumes:
         - name: dvc-current-model
