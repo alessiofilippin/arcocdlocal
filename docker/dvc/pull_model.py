@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 REPO_DIR = "/home/dvcuser/dvcdata/repo"
-DEST_DIR = "/home/dvcuser/dvcdata/deployed_model"
+DEST_DIR = "/home/dvcuser/current"
 
 def run(cmd, cwd=None):
     print(f"> {cmd}")
@@ -18,6 +18,7 @@ def checkout_tag(tag_name):
 
 def copy_model_files():
     os.makedirs(DEST_DIR, exist_ok=True)
+    run(f"rm -rf *", cwd=DEST_DIR)
     for file in os.listdir(REPO_DIR):
         full_file_name = os.path.join(REPO_DIR, file)
         if os.path.isfile(full_file_name) and not file.endswith(".dvc") and not file.startswith("."):

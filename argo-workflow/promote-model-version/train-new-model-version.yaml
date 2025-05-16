@@ -1,0 +1,66 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: promote-model-version
+spec:
+  entrypoint: main-dag
+  arguments:
+    parameters:
+      - name: tag
+        value: "v1.0.1"
+  volumes:
+    - name: dvc-storage-repo
+      nfs:
+        path: /mnt/dvc/repo
+        server: 192.168.137.21
+        readOnly: false
+    - name: dvc-storage-current-model
+      nfs:
+        path: /mnt/dvc/current
+        server: 192.168.137.21
+        readOnly: false
+  templates:
+    - name: main-dag
+      dag:
+        tasks:
+          - name: pull-and-promote-model-version
+            template: dag-pull-and-promote
+            arguments:
+              parameters:
+                - name: tag
+                  value: "{{workflow.parameters.tag}}"
+
+    - name: dag-pull-and-promote
+      inputs:
+        parameters:
+          - name: tag
+      dag:
+        tasks:
+
+          - name: pull-and-promote-model
+            template: pull-and-promote-model
+            arguments:
+              parameters:
+                - name: tag
+                  value: "{{inputs.parameters.tag}}"
+
+    - name: pull-and-promote-model
+      inputs:
+        parameters:
+          - name: tag
+      container:
+        image: private.registry.com:31445/dvc:latest
+        command: ["python"]
+        args: ["/usr/local/bin/push_model.py", "{{inputs.parameters.tag}}"]
+        volumeMounts:
+          - name: dvc-storage-repo
+            mountPath: /home/dvcuser/dvcdata
+          - name: dvc-storage-current-model
+            mountPath: /home/dvcuser/current
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "300m"
+          limits:
+            memory: "2Gi"
+            cpu: "800m"

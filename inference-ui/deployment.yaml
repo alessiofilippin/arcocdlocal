@@ -1,9 +1,10 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: fastapi-infer
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: infer
@@ -12,7 +13,6 @@ spec:
       labels:
         app: infer
     spec:
-      nodeName: ubuntu03
       containers:
       - name: infer
         image: private.registry.com:31445/inference-ui:latest
@@ -22,28 +22,34 @@ spec:
         - name: shared-data
           mountPath: /mnt/output/
       volumes:
-      - name: shared-data
-        persistentVolumeClaim:
-          claimName: dvc-current-pvc-ro
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: dvc-current-pvc-ro
-spec:
-  accessModes:
-    - ReadOnlyMany
-  resources:
-    requests:
-      storage: 10Gi
-  volumeMode: Filesystem
-  storageClassName: local-storage
-  volumeName: local-pv-dvc-repo-current-model-ro
+        - name: dvc-current-model
+          nfs:
+            path: /mnt/dvc/current
+            server: 192.168.137.21
+            readOnly: false
+  strategy:
+    blueGreen:
+      activeService: fastapi-infer-service-active
+      previewService: fastapi-infer-service-preview
+      autoPromotionEnabled: false
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: fastapi-infer-service
+  name: fastapi-infer-service-active
+spec:
+  selector:
+    app: infer
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-infer-service-preview
 spec:
   selector:
     app: infer
