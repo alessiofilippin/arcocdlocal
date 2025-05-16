@@ -14,7 +14,6 @@ This project provides a local Kubernetes development environment to experiment w
 - **`docker/`**: Dockerfiles and scripts to build container images used throughout the environment.
 - **`inference-ui/`**: Static frontend UI to perform inference through a web interface.
 - **`private-registry/`**: Setup files for a private Docker registry used to store locally built images.
-- **`todo/`**: Temporary folder for development tasks or notes.
 
 ---
 
