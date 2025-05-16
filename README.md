@@ -1,5 +1,9 @@
 # ArgoCD Local Deployment Environment
 
+## 🚧 MAN-AT-WORK
+
+This project is currently under active development and is not ready for production use.
+
 ## 1 - Overview
 
 This project provides a local Kubernetes development environment to experiment with GitOps using ArgoCD and workflow automation via Argo Workflows. It is designed for testing machine learning workflows and deploying applications using lightweight Docker images, minimal compute, and a simplified infrastructure footprint.
@@ -89,3 +93,46 @@ This workflow promotes a validated model version to be used in production or as 
 
 This flow represents the final approval step in a lightweight CI/CD-style pipeline.
 
+---
+
+## 7 - Inference-UI Rollout Flow
+
+The `inference-ui` component provides a very simple user interface for inference operations. The rollout process for `inference-ui` is managed through ArgoCD and follows these steps:
+
+1. **Manifest Definition**  
+   The Kubernetes manifests for `inference-ui` are located in the `inference-ui/` directory. These include Deployment, Service, and Ingress resources necessary for the application.
+
+2. **Application Configuration**  
+   An ArgoCD Application resource is defined to manage the `inference-ui` deployment. This configuration specifies the source repository, target revision, and the path to the manifests.
+
+3. **Deployment Process**  
+   - ArgoCD monitors the specified Git repository for changes in the `inference-ui` manifests.  
+   - Upon detecting changes, ArgoCD synchronizes the live cluster state with the desired state defined in the repository.  
+   - The synchronization process involves creating or updating Kubernetes resources to match the manifests.
+
+4. **Monitoring and Health Checks**  
+   - ArgoCD provides real-time monitoring of the `inference-ui` application.  
+   - Health checks are configured to ensure the application is running as expected.  
+   - Any discrepancies or issues are reported in the ArgoCD dashboard for prompt resolution.
+
+This automated rollout process ensures that updates to the `inference-ui` component are deployed consistently and reliably across environments.
+
+---
+
+## 🔮 Future Improvements
+
+To enhance the functionality and usability of this project, the following improvements are planned:
+
+- **CI/CD Integration**  
+  Implement continuous integration and deployment pipelines to automate testing and deployment processes, improving efficiency and reliability.
+
+- **Parameterization**  
+  Introduce parameterization in the Kubernetes manifests and Docker Images to allow for dynamic configuration.
+
+- **User Interface Enhancements**  
+  Improve the `inference-ui` component with additional features and a more intuitive user interface to enhance user experience.
+
+- **LLM Monitoring and Experimenting**  
+  Include the proper monitoring stack to make us of DVC's experimenting features.
+
+---
