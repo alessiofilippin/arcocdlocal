@@ -76,6 +76,13 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: fastapi-infer-service
+                name: fastapi-infer-service-active
+                port:
+                  number: 8000
+          - path: /preview
+            pathType: Prefix
+            backend:
+              service:
+                name: fastapi-infer-service-preview
                 port:
                   number: 8000
