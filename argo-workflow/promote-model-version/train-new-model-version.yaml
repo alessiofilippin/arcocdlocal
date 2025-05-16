@@ -51,7 +51,7 @@ spec:
       container:
         image: private.registry.com:31445/dvc:latest
         command: ["python"]
-        args: ["/usr/local/bin/push_model.py", "{{inputs.parameters.tag}}"]
+        args: ["/usr/local/bin/pull_model.py", "{{inputs.parameters.tag}}"]
         volumeMounts:
           - name: dvc-storage-repo
             mountPath: /home/dvcuser/dvcdata
