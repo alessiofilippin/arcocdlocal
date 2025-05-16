@@ -1,0 +1,11 @@
+project: default
+source:
+  repoURL: https://github.com/alessiofilippin/arcocdlocal.git
+  path: argo-workflow/train-and-inference-testing
+  targetRevision: HEAD
+destination:
+  server: https://kubernetes.default.svc
+  namespace: train-and-inference-testing
+syncPolicy:
+  syncOptions:
+    - CreateNamespace=true

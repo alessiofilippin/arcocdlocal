@@ -1,0 +1,11 @@
+project: default
+source:
+  repoURL: https://github.com/alessiofilippin/arcocdlocal.git
+  path: private-registry
+  targetRevision: HEAD
+destination:
+  server: https://kubernetes.default.svc
+  namespace: docker-registry
+syncPolicy:
+  syncOptions:
+    - CreateNamespace=true

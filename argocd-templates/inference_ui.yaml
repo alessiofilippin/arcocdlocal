@@ -1,0 +1,11 @@
+project: default
+source:
+  repoURL: https://github.com/alessiofilippin/arcocdlocal.git
+  path: inference-ui
+  targetRevision: HEAD
+destination:
+  server: https://kubernetes.default.svc
+  namespace: inference-ui
+syncPolicy:
+  syncOptions:
+    - CreateNamespace=true

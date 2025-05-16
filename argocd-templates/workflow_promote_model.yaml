@@ -1,0 +1,11 @@
+project: default
+source:
+  repoURL: https://github.com/alessiofilippin/arcocdlocal.git
+  path: argo-workflow/promote-model-version
+  targetRevision: HEAD
+destination:
+  server: https://kubernetes.default.svc
+  namespace: promote-model-version
+syncPolicy:
+  syncOptions:
+    - CreateNamespace=true

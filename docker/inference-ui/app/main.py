@@ -35,7 +35,7 @@ async def generate(request: Request, prompt: str = Form(...)):
     generated = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     # Manually remove the prompt part from the generated text
-    if generated.startswith(input_text):
-        generated = generated[len(input_text):].strip()
+    if generated.startswith(prompt):
+        generated = generated[len(prompt):].strip()
 
     return templates.TemplateResponse("index.html", {"request": request, "output": generated})

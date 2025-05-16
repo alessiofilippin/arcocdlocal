@@ -1,0 +1,11 @@
+project: default
+source:
+  repoURL: https://github.com/alessiofilippin/arcocdlocal.git
+  path: argo-workflow/train-new-model-version
+  targetRevision: HEAD
+destination:
+  server: https://kubernetes.default.svc
+  namespace: train-new-model-version
+syncPolicy:
+  syncOptions:
+    - CreateNamespace=true
